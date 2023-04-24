@@ -1,4 +1,4 @@
-local Dinosaure = {debug=false}
+local Dinosaure = {debug=true}
 
 local lst_imgs = {}
 
@@ -21,15 +21,37 @@ function Dinosaure.new(pType)
     vy=0,
     x=50,
     y=0,
-    h=210
+    h=210,
+    w=50
   }
 
-  local timer = {current=0, delai=10, speed=60}
+  dino.boundingbox = {x=dino.x, y=dino.y, w=50, h=dino.h, defW=50, defH=dino.h-10, decY=20}
 
-  function timer.update(dt)
-    timer.current = timer.current + timer.speed * dt
-    if timer.current >= timer.delai then
-      timer.current = 0
+  function dino.boundingbox.update(dt)
+    local anim = dino.anim[dino.status]
+    dino.w = anim.lstframes[anim.frame].w
+    --
+    dino.boundingbox.y = dino.y + dino.boundingbox.decY
+    dino.boundingbox.h = dino.h - dino.boundingbox.decY
+    --
+    if dino.status == "Walk" then 
+      dino.boundingbox.x = dino.x + 80      
+    elseif dino.status == "Run" then
+      dino.boundingbox.x = dino.x + 95
+    elseif dino.status == "Jump" then
+      dino.boundingbox.x = dino.x + 80
+      dino.boundingbox.y = dino.y + (dino.boundingbox.decY*2)
+      dino.boundingbox.h = dino.h - (dino.boundingbox.decY*2)
+    end
+  end
+  --
+
+  dino.timer = {current=0, delai=10, speed=60}
+
+  function dino.timer.update(dt)
+    dino.timer.current = dino.timer.current + dino.timer.speed * dt
+    if dino.timer.current >= dino.timer.delai then
+      dino.timer.current = 0
       return true
     end
     return false
@@ -82,24 +104,30 @@ function Dinosaure.new(pType)
   --
 
   function dino.anim.update(dt)
-    if timer.update(dt) then
+    if dino.timer.update(dt) then
 
       local anim = dino.anim[dino.status]
 
       anim.frame = anim.frame + 1
-
       if anim.frame > anim.lastframe then
-        if dino.type == "Game" and dino.status == "Walk" then
-          anim.frame = 1
-          dino.setAnim("Run")
-          Game.speed = Game.speedRun
-        elseif anim.loop then
-          anim.frame = 1 
-        else
-          anim.frame = anim.lastframe
+        if dino.type == "Game"  then
+          if dino.status == "Walk" then
+            anim.frame = 1
+            dino.setAnim("Run")
+            Game.speed = Game.speedRun
+          elseif anim.loop then
+            anim.frame = 1 
+          else
+            anim.frame = anim.lastframe
+          end
+        elseif dino.type == "Menu"  then
+          if anim.loop then
+            anim.frame = 1 
+          else
+            anim.frame = anim.lastframe
+          end
         end
       end
-
     end
   end
   --
@@ -123,12 +151,16 @@ function Dinosaure.new(pType)
       if dino.y + dino.h >= Game.surface then 
         dino.isJump = false
         dino.y = Game.surface - dino.h
-        dino.setAnim("Run")
+        if dino.live then
+          dino.setAnim("Run")
+        else
+          dino.setAnim("Dead")
+        end
       end
 
     end
   end
-  --
+--
 
 
   function dino.load()
@@ -137,7 +169,7 @@ function Dinosaure.new(pType)
     --
     dino.reset()
   end
-  --
+--
 
   function dino.update(dt)
     if Game.start and dino.type == "Game" then
@@ -155,8 +187,9 @@ function Dinosaure.new(pType)
     end
     --
     dino.anim.update(dt)
+    dino.boundingbox.update(dt)
   end
-  --
+--
 
   function dino.draw()
     local anim = dino.anim[dino.status]
@@ -166,17 +199,22 @@ function Dinosaure.new(pType)
 --
 
   function dino.drawDebug()
-    if dino.debug then
+    if Dinosaure.debug then
       love.graphics.setColor(0,1,0,1)
       love.graphics.print(dino.status, dino.x, dino.y-50, 0, 2, 2)
       love.graphics.setColor(1,1,1,1)
+
+      -- box colliders
+      love.graphics.setColor(0,1,0,1)
+      love.graphics.rectangle("line", dino.boundingbox.x, dino.boundingbox.y, dino.boundingbox.w, dino.boundingbox.h)
+      love.graphics.setColor(1,1,1,1)
     end
   end
-  --
+--
 
   function dino.mousepressed(x,y,button)
   end
-  --
+--
 
   function dino.keypressed(key)
     if Game.start and dino.type == "Game" then
@@ -188,7 +226,7 @@ function Dinosaure.new(pType)
       end
     end
   end
-  --
+--
 
   return dino
 

@@ -1,4 +1,4 @@
-local Game = {debug=false, start=false, pause=false, speedWalk=35, speedRun=100, speed=35, surface=480, gravity=250}
+local Game = {debug=false, start=false, pause=false, speedWalk=45, speedRun=120, speed=35, surface=480, gravity=250, score=0}
 
 DinoGame = Dinosaure.new()
 
@@ -6,6 +6,8 @@ function Game.reset()
   Game.speed = Game.speedWalk
   Game.start = false
   Game.pause = false
+  --
+  Game.score = 0
   --
   CycleJourNuit.reset()
   BackGround.reset()
@@ -25,6 +27,7 @@ function Game.load()
   BackGround.load()
   CycleJourNuit.reset()
   --
+  Caisses.load()
   DinoGame.load()
 end
 --
@@ -36,6 +39,7 @@ function Game.update(dt)
     CycleJourNuit.update(dt)
     --
     DinoGame.update(dt)
+    Caisses.update(dt)
   end
 end
 --
@@ -46,6 +50,7 @@ function Game.draw()
 
   -- entites
   DinoGame.draw()
+  Caisses.draw()
 
   -- jour nuit
   CycleJourNuit.draw()

@@ -8,6 +8,11 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 end
 --
 
+function AABB(object, versus)
+  return CheckCollision(object.x,object.y,object.w,object.h, versus.x,versus.y,versus.w,versus.h)
+end
+--
+
 -- Ecran
 Screen = {w=960, h=540}
 Screen.cx, Screen.cy = Screen.w/2, Screen.h/2

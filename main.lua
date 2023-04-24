@@ -4,6 +4,7 @@ require("Globals")
 
 -- Entitées
 Dinosaure = require("Dinosaure")
+Caisses = require("Caisses")
 
 -- requires Scenes:
 Scene = require("Scene")

@@ -51,7 +51,7 @@ end
 --
 
 function BackGround.update(dt)
-  if Game.start then
+  if Game.start and DinoGame.live then
     for n=1, #Lst_bgs do
       local bg = Lst_bgs[n]
       bg:update(dt)
