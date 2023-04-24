@@ -67,7 +67,7 @@ function Dinosaure.new(pType)
   --
 
   function dino.loadImages()
-    local dir = "Ressources/dino/"
+    local dir = "Ressources/Dino/"
     for a=1, #lst_status do
       for n=1, lst_frames[a] do
         local imgdata = love.graphics.newImage(dir..lst_status[a].." ("..n..").png")

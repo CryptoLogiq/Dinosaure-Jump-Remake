@@ -31,7 +31,7 @@ end
 
 Font.Caveat = {}
 for n=12, 48, 2 do
-  Font.Caveat[n] = love.graphics.newFont("Ressources/font/Caveat-VariableFont_wght.ttf", n)
+  Font.Caveat[n] = love.graphics.newFont("Ressources/Font/Caveat-VariableFont_wght.ttf", n)
 end
 
 -- Mouse
