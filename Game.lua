@@ -12,13 +12,13 @@ function Game.reset()
   CycleJourNuit.reset()
   BackGround.reset()
   DinoGame.reset()
+  Caisses.reset()
 end
 --
 
 function Game.launch()
   Game.start = true
   Game.pause = false
-  DinoGame.live = true
 end
 --
 
@@ -68,11 +68,8 @@ end
 function Game.keypressed(key)
   DinoGame.keypressed(key)
   --
-  if key == "escape" and DinoGame.live then
+  if key == "escape" then
     Scene.set(Menu)
-    Game.pause = true
-  elseif key == "escape" and not DinoGame.live then
-    Menu.reset()
   end
 end
 --

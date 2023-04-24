@@ -82,14 +82,38 @@ end
 --
 
 function Boutons.load()
-  playContinue = Boutons.newBouton( "Play", function(self) Scene.set(Game); Game.launch(); self:setText("Continue") end )
-  Boutons.newBouton( "Quit", function(self) love.event.quit() end )
+  playContinue = Boutons.newBouton(
+    "Play",
+    function(self) 
+      if self.text.string == "Play" or self.text.string == "New Game" then
+        Game.reset()
+        Game.launch()
+        self:setText("Continue")
+        Scene.set(Game)
+      elseif self.text.string == "Continue" then
+        Game.launch()
+        Scene.set(Game)
+      end
+    end
+  )
+
+  Boutons.newBouton(
+    "Quit",
+    function(self)
+      love.event.quit()
+    end
+  )
+
 end
 --
 
 function Boutons.update(dt)
   for n=1, #Lst_Boutons do
     local bt = Lst_Boutons[n]
+    if playContinue == bt and not DinoGame.live then
+      playContinue:setText("New Game")
+      print("HERE")
+    end
     bt:update(dt)
   end
 end

@@ -86,10 +86,12 @@ function Dinosaure.new(pType)
   --
 
   function dino.setAnim(pAnim)
-    -- reset anim for next
-    dino.anim[dino.status].frame = 1
-    -- set dino anim
-    dino.status = pAnim
+    if dino.status ~= pAnim then
+      -- reset anim for next
+      dino.anim[dino.status].frame = 1
+      -- set dino anim
+      dino.status = pAnim
+    end
   end
   --
 
@@ -100,6 +102,7 @@ function Dinosaure.new(pType)
     dino.live = true
     dino.isJump = false
     dino.vy = 0
+    dino.status = "Idle"
   end
   --
 

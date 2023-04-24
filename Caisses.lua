@@ -9,7 +9,7 @@ local timer = {current=0, delai=40, speed=10}
 
 function Caisses.reset()
   Lst_Box = {}
-  Caisses.timer.reset()
+  timer.reset()
 end
 --
 
@@ -89,8 +89,8 @@ function Caisses.update(dt)
     end
 
     if Caisses.collide() then
-        DinoGame.live = false
-        DinoGame.setAnim("Dead")
+      DinoGame.live = false
+      DinoGame.setAnim("Dead")
     end
 
   end
