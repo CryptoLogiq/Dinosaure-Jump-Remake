@@ -1,4 +1,4 @@
-local Game = {debug=false, start=false, pause=false, speedWalk=45, speedRun=120, speed=35, surface=480, gravity=250, score=0}
+local Game = {debug=false, start=false, capture=nil, pause=false, speedWalk=45, speedRun=120, speed=35, surface=480, gravity=250, score=0}
 
 DinoGame = Dinosaure.new()
 

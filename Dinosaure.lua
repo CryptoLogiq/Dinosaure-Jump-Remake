@@ -1,4 +1,4 @@
-local Dinosaure = {debug=true}
+local Dinosaure = {debug=false}
 
 local lst_imgs = {}
 

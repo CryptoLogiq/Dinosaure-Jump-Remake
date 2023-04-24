@@ -25,9 +25,6 @@ function Menu.draw()
   DinoMenu.draw()
   --
   Boutons.draw()
-  if Game.start then
---    DinoGame.draw()
-  end
 end
 --
 

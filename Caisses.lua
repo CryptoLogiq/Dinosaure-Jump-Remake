@@ -1,4 +1,4 @@
-local Caisses = {debug=true}
+local Caisses = {debug=false}
 
 local lst_imgs = {}
 local dir = "Ressources/Box/"
