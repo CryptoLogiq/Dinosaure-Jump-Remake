@@ -1,6 +1,9 @@
-local Game = {debug=false, start=false, capture=nil, pause=false, speedWalk=45, speedRun=120, speed=35, surface=480, gravity=250, score=0}
+local Game = {debug=false, start=false, capture=nil, pause=false, speedWalk=60, speedRun=150, speed=35, surface=480, gravity=250, score=0}
 
 DinoGame = Dinosaure.new()
+
+local Count = 0
+local incrementeSpeed = 50
 
 function Game.reset()
   Game.speed = Game.speedWalk
@@ -8,6 +11,7 @@ function Game.reset()
   Game.pause = false
   --
   Game.score = 0
+  Count = 0
   --
   CycleJourNuit.reset()
   BackGround.reset()
@@ -40,6 +44,12 @@ function Game.update(dt)
     --
     DinoGame.update(dt)
     Caisses.update(dt)
+    --
+    if Game.score - Count >= 50 then
+      Count = Game.score
+      Game.speed = Game.speed + incrementeSpeed
+    end
+    --
   end
 end
 --

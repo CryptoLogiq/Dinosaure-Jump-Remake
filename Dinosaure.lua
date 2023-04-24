@@ -3,7 +3,7 @@ local Dinosaure = {debug=false}
 local lst_imgs = {}
 
 local lst_status = {"Dead",   "Idle",   "Jump",   "Run",  "Walk"}
-local lst_frames = { 8,        10,       12,       8,      10   }
+local lst_frames = { 8,        10,       11,       8,      10   }
 local lst_loop =   { false,    true,     false,     true,   true }
 
 function Dinosaure.new(pType)
@@ -15,6 +15,8 @@ function Dinosaure.new(pType)
     anim={},
     firstJump=false,
     isJump=false,
+    isJumped=false,
+    readyToJump=false,
     impulse = -30,
     forceJump=-300,
     masse=100,
@@ -46,10 +48,16 @@ function Dinosaure.new(pType)
   end
   --
 
-  dino.timer = {current=0, delai=10, speed=60}
+  dino.timer = {current=0, delai=10, speed=60, speedDef=60, speedDefRun=120}
 
   function dino.timer.update(dt)
-    dino.timer.current = dino.timer.current + dino.timer.speed * dt
+    local speed = dino.timer.speedDef
+    if dino.type == "Game" then
+      if dino.status == "Run" or dino.status == "Jump" then
+        speed = dino.timer.speedDefRun + Game.speed * dt
+      end
+    end
+    dino.timer.current = dino.timer.current + speed * dt
     if dino.timer.current >= dino.timer.delai then
       dino.timer.current = 0
       return true
@@ -112,6 +120,13 @@ function Dinosaure.new(pType)
       local anim = dino.anim[dino.status]
 
       anim.frame = anim.frame + 1
+
+      if dino.status == "Jump" then
+        if anim.frame == 3 then
+          dino.readyToJump = true
+        end
+      end
+
       if anim.frame > anim.lastframe then
         if dino.type == "Game"  then
           if dino.status == "Walk" then
@@ -136,15 +151,23 @@ function Dinosaure.new(pType)
   --
 
   function dino.Jump(dt)
+
     if not dt then
       dino.isJump = true
-      dino.y = dino.y + dino.impulse
       dino.vy = dino.forceJump
+      if dino.status ~= "Jump" then 
+        dino.setAnim("Jump")
+      end
       return true
     end
 
-    if dino.isJump then
-      if dino.status ~= "Jump" then dino.setAnim("Jump") end
+
+    if dino.isJump and dino.readyToJump and dino.y == Game.surface - dino.h then
+      dino.y = dino.y + dino.impulse
+      dino.readyToJump = false
+      dino.isJumped = true
+    elseif dino.isJumped  then
+
       dino.y = dino.y + dino.vy * dt
       dino.vy = dino.vy + Game.gravity * dt
       if dino.vy >= 0 then
@@ -153,6 +176,7 @@ function Dinosaure.new(pType)
 
       if dino.y + dino.h >= Game.surface then 
         dino.isJump = false
+        dino.isJumped = false
         dino.y = Game.surface - dino.h
         if dino.live then
           dino.setAnim("Run")
@@ -160,10 +184,10 @@ function Dinosaure.new(pType)
           dino.setAnim("Dead")
         end
       end
-
     end
+
   end
---
+  --
 
 
   function dino.load()
